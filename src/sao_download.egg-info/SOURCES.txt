@@ -1,9 +1,0 @@
-README.md
-pyproject.toml
-setup.py
-src/sao_download.egg-info/PKG-INFO
-src/sao_download.egg-info/SOURCES.txt
-src/sao_download.egg-info/dependency_links.txt
-src/sao_download.egg-info/entry_points.txt
-src/sao_download.egg-info/requires.txt
-src/sao_download.egg-info/top_level.txt

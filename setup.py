@@ -14,9 +14,7 @@ setuptools.setup(
     project_urls={
         "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
     },
-    packages=setuptools.find_packages(
-
-        ),
+    packages=setuptools.find_packages(where="src"),
     install_requires=[
             "requests",
             "tqdm",
@@ -24,7 +22,7 @@ setuptools.setup(
         ],
     entry_points={
             "console_scripts": [
-                "niu-download = SaoDownload.src.sao_download:cli_main",
+                "niu-download = sao_download.download:cli_main",
             ],
         },
     classifiers=[
@@ -33,6 +31,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+
     python_requires=">=3.6",
 )
