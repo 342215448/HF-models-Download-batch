@@ -104,21 +104,20 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
 
 # 批量下载所有指定的模型
 def batch_download_models(download_folder, model_name_list):
-    # 设置模型的文件夹
-    # download_folder = 'models/'
     assert model_name_list is not None, '必须设置-m，指向要下载的模型'
     create_folder_if_not_exists(download_folder)
     model_name_list = set(re.split('\,|\，', model_name_list))
-    # 设置调用列表
-    # model_name_list = {
-    #     "BAAI/bge-large-zh-v1.5",
-    # }
-
     for model_name in model_name_list:
         url = 'https://huggingface.co/' + model_name + '/tree/main'
         download_pretrained_models(model_name, url, download_folder)
     print('Downloading done...')
-
+# 批量下载所有指定的模型
+def batch_download_models_inner(download_folder, model_name_list):
+    create_folder_if_not_exists(download_folder)
+    for model_name in model_name_list:
+        url = 'https://huggingface.co/' + model_name + '/tree/main'
+        download_pretrained_models(model_name, url, download_folder)
+    print('Downloading done...')
 
 def parse_args():
     parser = argparse.ArgumentParser()
