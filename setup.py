@@ -10,7 +10,7 @@ setuptools.setup(
     description="A tool that can download Hugging Face model(s)",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/342215448/SaoDownload.git",
+    url="https://github.com/342215448/HF-models-Download-batch.git",
     project_urls={
         "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
     },
