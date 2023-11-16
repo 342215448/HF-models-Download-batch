@@ -14,6 +14,9 @@ setuptools.setup(
     project_urls={
         "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
     },
+    packages=setuptools.find_packages(
+
+        ),
     install_requires=[
             "requests",
             "tqdm",
