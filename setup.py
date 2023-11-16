@@ -14,6 +14,16 @@ setuptools.setup(
     project_urls={
         "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
     },
+    install_requires=[
+            "requests",
+            "tqdm",
+            "Beautifulsoup4",
+        ],
+    entry_points={
+            "console_scripts": [
+                "niu-download = src.sao_download:cli_main",
+            ],
+        },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

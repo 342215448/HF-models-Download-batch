@@ -1,0 +1,2 @@
+[console_scripts]
+niu-download = src.sao_download:cli_main
