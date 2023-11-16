@@ -13,3 +13,10 @@
     sd.download_models('models', ['roberta-base', 'gpt2', 'bert-base-uncased'])
     ```
   #### This code will download roberta-base、 gpt2、 bert-base-uncased into "models"
+
+## You can also use in cli
+    ```
+    niu-download -m gpt2,roberta-base -d Models
+    ```
+### -m means the model(s) from Huggingface you want to download
+### -d means the output dirct you want to store the model(s)
