@@ -4,13 +4,13 @@
 - ### Download "roberta-base" from Hugging face to "models" 
     ```
     from sao_download import download as sd
-    sd.download_models('models', ['gpt2'])
+    sd.batch_download_models_inner('models', ['gpt2'])
     ```
   #### And then, the whole gpt2 model in pytorch will be stored in "models" direct.
 - ### Batch Download pytorch models from Hugging Face
     ```
     from sao_download import download as sd
-    sd.download_models('models', ['roberta-base', 'gpt2', 'bert-base-uncased'])
+    sd.batch_download_models_inner('models', ['roberta-base', 'gpt2', 'bert-base-uncased'])
     ```
   #### This code will download roberta-base、 gpt2、 bert-base-uncased into "models"
 
