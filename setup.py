@@ -6,7 +6,7 @@ setuptools.setup(
     name="niu_download",
     version="0.0.1",
     author="Peinan Feng & Junhao Ruan & Peizhuo Liu (NEUNLPLAB)",
-    author_email="fpnan@foxmail@foxmail.com",
+    author_email="fpnan@foxmail.com",
     description="A tool that can download Hugging Face model(s)",
     long_description=long_description,
     long_description_content_type="text/markdown",
