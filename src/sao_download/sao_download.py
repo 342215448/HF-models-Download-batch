@@ -1,6 +1,6 @@
 import os
 from functools import partial
-import argparse
+
 import requests
 import subprocess
 import time
@@ -12,9 +12,9 @@ from tqdm import tqdm
 def create_folder_if_not_exists(folder_path):
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-        print(f"direct '{folder_path}'succeed in creating...")
+        print(f"文件夹 '{folder_path}' 创建成功")
     else:
-        print(f"direct '{folder_path}' is already there...")
+        print(f"文件夹 '{folder_path}' 已经存在")
 
 
 def download_with_resume(url, download_path):
@@ -46,7 +46,7 @@ def download_with_resume(url, download_path):
                 bar.update(size)
     else:
         downloaded_size = os.path.getsize(download_path)
-        print(f"total length: {downloaded_size} bytes")
+        print(f"文件总大小: {downloaded_size} bytes")
 
 
 # 下载预训练好的模型到指定目录下 每次调用相当于下载了一个对应的模型
@@ -62,9 +62,9 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
             response = requests.get(url)
             break
         except requests.exceptions.RequestException:
-            print('failed in geting url root:', url)
+            print('获取根路径失败:', url)
             retries_cnt += 1
-            print(f'retrying ({retries_cnt}/{max_retries})...')
+            print(f'正在重试 ({retries_cnt}/{max_retries})...')
     soup = BeautifulSoup(response.content, 'html.parser')
 
     # 查找具有特定标题的所有a标签
@@ -77,9 +77,9 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
                                                                                             'dark:border-gray-800'})
 
     remote_file_name_list = [r.find('span', {'class': 'truncate group-hover:underline'}).text.strip() for r in
-                             remote_file_list]
+                             remote_file_list if r.find('span', {'class': 'truncate group-hover:underline'})]
     remote_url_list = ['https://huggingface.co' + r.find('a', title="Download file").get('href') for r in
-                       remote_file_list]
+                       remote_file_list if r.find('a', title="Download file")]
 
     for remote_file_name, remote_url in zip(remote_file_name_list, remote_url_list):
         retries = 0
@@ -87,32 +87,30 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
             time.sleep(3)
             try:
                 if remote_file_name.endswith(('ot', 'h5', 'pth', 'msgpack', 'safetensors')):
-                    print(f'{remote_file_name}not torch model, skip')
+                    print(f'{remote_file_name}不是torch模型，跳过')
                     break
                 download_with_resume(remote_url, os.path.join(download_folder, remote_file_name))
                 break
 
             except subprocess.CalledProcessError:
-                print('failed download:', remote_file_name)
+                print('下载失败:', remote_file_name)
                 retries += 1
-                print(f'retrying ({retries}/{max_retries})...')
+                print(f'正在重试 ({retries}/{max_retries})...')
 
         if retries == max_retries:
-            print(f'can\'t download: {remote_file_name}')
+            print(f'无法下载文件: {remote_file_name}')
 
 
 # 批量下载所有指定的模型
-def download_models(folder_name, model_name_list):
+def batch_download_models():
     # 设置模型的文件夹
-    #download_folder = 'models/'
-    download_folder = folder_name
-
+    download_folder = 'models/'
     create_folder_if_not_exists(download_folder)
 
     # 设置调用列表
-    # model_name_list = {
-    #     "roberta-base",
-    # }
+    model_name_list = {
+        "BAAI/bge-large-zh-v1.5",
+    }
 
     for model_name in model_name_list:
         url = 'https://huggingface.co/' + model_name + '/tree/main'
@@ -120,15 +118,11 @@ def download_models(folder_name, model_name_list):
     print('Downloading done...')
 
 
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser(
-#         description="downloading pytorch model(s) in Hugging Face. powered by Junhao Ruan & Peinan Feng(NEUNLPLAB)")
-#     parser.add_argument("--output_dir", type=str,
-#                         help="the direct of model(s) will be store", default='models')
-#     parser.add_argument("--model_list", type=str,
-#                         help="the name of the model(s) in Hugging Fance. (Like bert-base-uncased roberta-base SamLowe/roberta-base-go_emotions)", nargs='+', required=True)
-#     args = parser.parse_args()
-#     output_dir = args.output_dir
-#     model_list = args.model_list
-#     download_models(output_dir,model_list)
-#     print('done...')
+if __name__ == '__main__':
+    # parser = argparse.ArgumentParser(description="Translate articles using a pretrained model.")
+    # parser.add_argument("--models_size", type=str, help="The size of models, you can choose large/base/mobile.",
+    # required=True) args = parser.parse_args()
+    batch_download_models()
+    # batch_download_models("mobile")
+    # save_dict_to_txt(get_model_list(), 'modelList.txt')
+    # print('done...')
