@@ -21,7 +21,7 @@ setuptools.setup(
         ],
     entry_points={
             "console_scripts": [
-                "niu-download = src.sao_download:cli_main",
+                "niu-download = SaoDownload.src.sao_download:cli_main",
             ],
         },
     classifiers=[

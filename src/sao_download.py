@@ -106,6 +106,7 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
 def batch_download_models(download_folder, model_name_list):
     # 设置模型的文件夹
     # download_folder = 'models/'
+    assert model_name_list is not None,'必须设置-m，指向要下载的模型'
     create_folder_if_not_exists(download_folder)
     model_name_list = set(re.split('\;|\；', model_name_list))
     # 设置调用列表
