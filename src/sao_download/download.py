@@ -1,11 +1,12 @@
 import os
-from functools import partial
 
+import re
 import requests
 import subprocess
 import time
 from bs4 import BeautifulSoup
 from tqdm import tqdm
+import argparse
 
 
 # 创建文件夹的函数
@@ -102,15 +103,16 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
 
 
 # 批量下载所有指定的模型
-def batch_download_models():
+def batch_download_models(download_folder, model_name_list):
     # 设置模型的文件夹
-    download_folder = 'models/'
+    # download_folder = 'models/'
+    assert model_name_list is not None, '必须设置-m，指向要下载的模型'
     create_folder_if_not_exists(download_folder)
-
+    model_name_list = set(re.split('\;|\；', model_name_list))
     # 设置调用列表
-    model_name_list = {
-        "BAAI/bge-large-zh-v1.5",
-    }
+    # model_name_list = {
+    #     "BAAI/bge-large-zh-v1.5",
+    # }
 
     for model_name in model_name_list:
         url = 'https://huggingface.co/' + model_name + '/tree/main'
@@ -118,11 +120,19 @@ def batch_download_models():
     print('Downloading done...')
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-m',
+                        help='输入huggingface复制的模型名词，如baichuan-inc/Baichuan2-13B-Chat;同时下载多个文件使用;隔开')
+    parser.add_argument('-d', '--directory', default='models/',
+                        help='要保存的路径，默认在models/')
+    return parser.parse_args()
+
+
+def cli_main():
+    args = parse_args()
+    batch_download_models(download_folder=args.directory, model_name_list=args.m)
+
+
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser(description="Translate articles using a pretrained model.")
-    # parser.add_argument("--models_size", type=str, help="The size of models, you can choose large/base/mobile.",
-    # required=True) args = parser.parse_args()
-    batch_download_models()
-    # batch_download_models("mobile")
-    # save_dict_to_txt(get_model_list(), 'modelList.txt')
-    # print('done...')
+    cli_main()
