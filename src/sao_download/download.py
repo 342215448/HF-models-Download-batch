@@ -9,19 +9,19 @@ from tqdm import tqdm
 import argparse
 
 
-# 创建文件夹的函数
+# Function which build directory
 def create_folder_if_not_exists(folder_path):
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-        print(f"文件夹 '{folder_path}' 创建成功")
+        print(f"Folder '{folder_path}' has been built")
     else:
-        print(f"文件夹 '{folder_path}' 已经存在")
+        print(f"Folder '{folder_path}' already existed")
 
 
 def download_with_resume(url, download_path):
-    # 设置文件保存路径
+    # Setting the saving directory
 
-    # 检查本地文件是否存在
+    # Check if already existed
     if os.path.exists(download_path):
         resume_header = {'Range': 'bytes=%d-' % os.path.getsize(download_path)}
         response = requests.get(url, headers=resume_header, stream=True)
@@ -29,7 +29,7 @@ def download_with_resume(url, download_path):
     else:
         response = requests.get(url, stream=True)
 
-    # 检查服务器是否支持断点续传
+    # Check if breakpoint resume transmission is supported by the server
     if 'Accept-Ranges' in response.headers and response.headers[
         'Accept-Ranges'] == 'bytes' and response.status_code != 416:
 
@@ -47,9 +47,10 @@ def download_with_resume(url, download_path):
                 bar.update(size)
     else:
         downloaded_size = os.path.getsize(download_path)
-        print(f"文件总大小: {downloaded_size} bytes")
+        print(f"Total size: {downloaded_size} bytes")
 
-
+# Download the pretrain model in specific directory
+# Everytime when this function is called, a specific model is downloaded
 # 下载预训练好的模型到指定目录下 每次调用相当于下载了一个对应的模型
 def download_pretrained_models(model_name, url, download_folder, max_retries=500):
     # download_folder = download_folder + '/' + url.split('/')[-3]
@@ -63,9 +64,9 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
             response = requests.get(url)
             break
         except requests.exceptions.RequestException:
-            print('获取根路径失败:', url)
+            print('Fail to get the root path:', url)
             retries_cnt += 1
-            print(f'正在重试 ({retries_cnt}/{max_retries})...')
+            print(f'Retry ({retries_cnt}/{max_retries})...')
     soup = BeautifulSoup(response.content, 'html.parser')
 
     # 查找具有特定标题的所有a标签
@@ -94,26 +95,24 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
                 break
 
             except subprocess.CalledProcessError:
-                print('下载失败:', remote_file_name)
+                print('Fail to download:', remote_file_name)
                 retries += 1
-                print(f'正在重试 ({retries}/{max_retries})...')
+                print(f'Retry ({retries}/{max_retries})...')
 
         if retries == max_retries:
-            print(f'无法下载文件: {remote_file_name}')
+            print(f'Can not download: {remote_file_name}')
 
 
 # 批量下载所有指定的模型
 def batch_download_models(download_folder, model_name_list):
-    assert model_name_list is not None, '必须设置-m，指向要下载的模型'
+    assert model_name_list is not None, 'You have to specify -m, which represents the models you want to download'
     create_folder_if_not_exists(download_folder)
-    model_name_list = set(re.split('\,|\，', model_name_list))
-    for model_name in model_name_list:
-        url = 'https://huggingface.co/' + model_name + '/tree/main'
-        download_pretrained_models(model_name, url, download_folder)
-    print('Downloading done...')
-# 批量下载所有指定的模型
-def batch_download_models_inner(download_folder, model_name_list):
-    create_folder_if_not_exists(download_folder)
+    if type(model_name_list) == str:
+        model_name_list = set(re.split('\,|\，', model_name_list))
+    elif type(model_name_list) == list:
+        model_name_list = set(model_name_list)
+    else:
+        raise ValueError("Invalid format of model lists")
     for model_name in model_name_list:
         url = 'https://huggingface.co/' + model_name + '/tree/main'
         download_pretrained_models(model_name, url, download_folder)
@@ -121,16 +120,16 @@ def batch_download_models_inner(download_folder, model_name_list):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m',
-                        help='输入huggingface复制的模型名词，如baichuan-inc/Baichuan2-13B-Chat;同时下载多个文件使用;隔开')
+    parser.add_argument('-m', '--models', default='bert-base-uncased', 
+                        help='Typing the name of models in huggingface, such as baichuan-inc or Baichuan2-13B-Chat\
+                        Using \';\' to separate several models')
     parser.add_argument('-d', '--directory', default='models/',
-                        help='要保存的路径，默认在models/')
+                        help='Saving path, default is models/')
     return parser.parse_args()
-
 
 def cli_main():
     args = parse_args()
-    batch_download_models(download_folder=args.directory, model_name_list=args.m)
+    batch_download_models(download_folder=args.directory, model_name_list=args.models)
 
 
 if __name__ == '__main__':
