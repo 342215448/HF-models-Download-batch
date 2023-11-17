@@ -1,5 +1,5 @@
-# This is a tool that can automatically download models from Hugging Face(Windows or Linux).You can download single model or make batch download.
-> this project is powered by NEU(China) NLPLAB master students: Peinan Feng, Junhao Ruan and Peizhuo Liu. Any issue is welcomed.
+# NiuDownload
+> This is a tool that can automatically download models from Hugging Face(Windows or Linux).You can download single model or make batch download. The project is powered by NEU(China) NLPLAB master students: Peinan Feng, Junhao Ruan and Peizhuo Liu. Any issue is welcomed.
 **Only pytorch version models are supported now**
 ## Use in python script
 ### Single Download
