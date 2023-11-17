@@ -1,22 +1,24 @@
 # This is a tool that can automatically download models from Hugging Face(Windows or Linux).You can download single model or make batch download.
-
-## You can use this tool in python script
-- ### Download "roberta-base" from Hugging face to "models" 
+> this project is powered by NEU(China) NLPLAB master students: Peinan Feng, Junhao Ruan and Peizhuo Liu. Any issue is welcomed.
+**Only pytorch version models are supported now**
+## Use in python script
+### Single Download
     ```
     from sao_download import download as sd
-    sd.batch_download_models_inner('models', ['gpt2'])
+    sd.batch_download_models('models', 'gpt2')
     ```
-  #### And then, the whole gpt2 model in pytorch will be stored in "models" direct.
-- ### Batch Download pytorch models from Hugging Face
+   In this way, the whole gpt2 model in pytorch version will be stored in "models" directory.
+### Batch Download
     ```
     from sao_download import download as sd
-    sd.batch_download_models_inner('models', ['roberta-base', 'gpt2', 'bert-base-uncased'])
+    sd.batch_download_models('models', ['roberta-base', 'gpt2', 'bert-base-uncased'])
     ```
-  #### This code will download roberta-base、 gpt2、 bert-base-uncased into "models"
-
-## You can also use in cli
-
-    niudownload -m gpt2,roberta-base -d Models
-
-"-m" means the model(s) from Huggingface you want to download
-"-d" means the output dirct you want to store the model(s)
+    or 
+    ```
+    sd.batch_download_models('models', 'roberta-base, gpt2, bert-base-uncased')
+    ```
+  In this way, roberta-base、 gpt2、 bert-base-uncased will be stored in "models" directory.
+### Use in command line
+    ```
+     niu-download -m 'bert-base-uncased' -d /your/download/path
+    ```
