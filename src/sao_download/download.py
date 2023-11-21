@@ -88,7 +88,7 @@ def download_pretrained_models(model_name, url, download_folder, max_retries=500
         while retries < max_retries:
             time.sleep(3)
             try:
-                if remote_file_name.endswith(('ot', 'h5', 'pth', 'msgpack', 'safetensors')):
+                if remote_file_name.endswith(('ot', 'h5', 'pth', 'msgpack', 'safetensors','tflite')):
                     print(f'{remote_file_name}不是torch模型，跳过')
                     break
                 download_with_resume(remote_url, os.path.join(download_folder, remote_file_name))
